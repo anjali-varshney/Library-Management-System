@@ -2,7 +2,7 @@ package com.ajackus.Library_Management_System.controller;
 
 import com.ajackus.Library_Management_System.dto.BookDTO;
 import com.ajackus.Library_Management_System.service.interfaces.BookService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/books")
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
