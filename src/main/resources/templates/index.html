@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* Global Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+
+        /* Menu Styling */
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .menu-button {
+            display: block;
+            width: 250px;
+            padding: 12px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .menu-button {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>📚 Welcome to the Library Management System</h1>
+
+<div class="menu">
+    <a th:href="@{/books/view}" class="menu-button">📖 View All Books</a>
+    <a th:href="@{/books/add}" class="menu-button">➕ Add a New Book</a>
+    <a th:href="@{/books/search}" class="menu-button">🔍 Search Books</a>
+    <a th:href="@{/books/update}" class="menu-button">✏️ Update a Book</a>
+    <a th:href="@{/books/delete}" class="menu-button" style="background: #DC3545;">🗑️ Delete a Book</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Book</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .container {
+            width: 50%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>✏️ Update Book Details</h1>
+
+<div class="container">
+    <!-- Search Book Form -->
+    <form th:action="@{/books/update}" method="get">
+        <input type="text" name="title" placeholder="Enter book title..." required>
+        <input type="text" name="isbn" placeholder="Enter ISBN..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Book Details Form (Only visible if a book is found) -->
+    <div th:if="${book}">
+        <form th:action="@{/books/update}" method="post">
+            <input type="hidden" name="id" th:value="${book.id}" />
+
+            <label>Title:</label>
+            <input type="text" name="title" th:value="${book.title}" readonly />
+
+            <label>ISBN:</label>
+            <input type="text" name="isbn" th:value="${book.isbn}" readonly />
+
+            <label>Author:</label>
+            <input type="text" name="author" th:value="${book.author}" />
+
+            <label>Genre:</label>
+            <input type="text" name="genre" th:value="${book.genre}" />
+
+            <label>Availability:</label>
+            <select name="availabilityStatus">
+                <option value="Available" th:selected="${book.availabilityStatus == 'Available'}">Available</option>
+                <option value="Not Available" th:selected="${book.availabilityStatus == 'Not Available'}">Not Available</option>
+            </select>
+
+            <button type="submit">Update Book</button>
+        </form>
+    </div>
+
+    <p class="result" th:if="${message}" th:text="${message}" style="color: red;"></p>
+
+    <a href="/" class="back-link">⬅ Back to Home</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Book</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .container {
+            width: 50%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔍 Search for a Book</h1>
+
+<div class="container">
+    <form th:action="@{/books/search}" method="get">
+        <input type="text" name="title" placeholder="Enter book title..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="result" th:if="${book}">
+        <p><strong>Title:</strong> <span th:text="${book.title}"></span></p>
+        <p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
+        <p><strong>Genre:</strong> <span th:text="${book.genre}"></span></p>
+        <p><strong>ISBN:</strong> <span th:text="${book.isbn}"></span></p>
+        <p><strong>Availability:</strong> <span th:text="${book.availabilityStatus}"></span></p>
+    </div>
+
+    <p class="result" th:if="${message}" th:text="${message}" style="color: red;"></p>
+
+    <a href="/" class="back-link">⬅ Back to Home</a>
+</div>
+
+</body>
+</html>
