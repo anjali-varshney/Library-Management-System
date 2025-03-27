@@ -15,5 +15,7 @@ public class Book {
     private  String author;
     private  String genre;
     private  String availabilityStatus;
-    private String isbn;
+
+    @Column(unique = true, nullable = false)
+    private String isbn; //International Standard Book Number
 }

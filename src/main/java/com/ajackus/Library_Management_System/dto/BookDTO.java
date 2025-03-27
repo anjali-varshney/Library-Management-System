@@ -1,10 +1,7 @@
 package com.ajackus.Library_Management_System.dto;
 
 import com.ajackus.Library_Management_System.model.Book;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

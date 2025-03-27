@@ -69,6 +69,17 @@
             display: none; /* Initially hidden */
         }
 
+        .error-message {
+            color: red;
+            font-weight: bold;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none; /* Initially hidden */
+        }
+
+
         .back-link {
             display: inline-block;
             margin-top: 15px;
@@ -91,6 +102,10 @@
     <div th:if="${successMessage}" class="success-message" id="successMessage">
         <p th:text="${successMessage}"></p>
     </div>
+    <div th:if="${errorMessage}" class="error-message" id="errorMessage">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
 
     <!-- Book Form -->
     <form th:action="@{/books/add}" th:object="${bookDTO}" method="post">
@@ -121,6 +136,13 @@
             setTimeout(() => {
                 messageDiv.style.display = "none";
             }, 3000); // Hide message after 3 seconds
+        }
+         let errorMessageDiv = document.getElementById("errorMessage");
+        if (errorMessageDiv) {
+            errorMessageDiv.style.display = "block";
+            setTimeout(() => {
+                errorMessageDiv.style.display = "none";
+            }, 3000); // Hide error message after 3 seconds
         }
     });
 </script>

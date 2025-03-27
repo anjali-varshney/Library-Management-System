@@ -9,10 +9,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +27,23 @@ public class BookServiceImpl implements BookService {
     public BookDTO addBook(BookDTO bookDto) {
         log.info("Adding new book: {}", bookDto.getTitle());
 
-        if (bookRepository.existsByTitle(bookDto.getTitle())) {
-            throw new LibraryManagementException("Duplicate book entry: " + bookDto.getTitle());
+        // Check if a book with the same ISBN already exists
+        if (bookRepository.findByIsbn(bookDto.getIsbn()).isPresent()) {
+            throw new LibraryManagementException("A book with ISBN " + bookDto.getIsbn() + " already exists. Please use a different ISBN.");
         }
 
+        // Check if a book with the same Title already exists
+        if (bookRepository.existsByTitle(bookDto.getTitle())) {
+            throw new LibraryManagementException("A book with the title '" + bookDto.getTitle() + "' already exists.");
+        }
+
+        // Map DTO to entity and save
         Book book = modelMapper.map(bookDto, Book.class);
         bookRepository.save(book);
+
         return modelMapper.map(book, BookDTO.class);
     }
+
 
     @Override
     public List<BookDTO> getAllBooks() {

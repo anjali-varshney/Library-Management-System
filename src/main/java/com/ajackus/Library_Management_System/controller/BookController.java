@@ -1,6 +1,7 @@
 package com.ajackus.Library_Management_System.controller;
 
 import com.ajackus.Library_Management_System.dto.BookDTO;
+import com.ajackus.Library_Management_System.exception.LibraryManagementException;
 import com.ajackus.Library_Management_System.service.interfaces.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 //@Controller
@@ -20,12 +22,19 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/add")
-    public ResponseEntity<BookDTO> addBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<?> addBook(@RequestBody BookDTO bookDTO) {
         log.info("Received request to add book: {}", bookDTO);
-        BookDTO savedBook = bookService.addBook(bookDTO);
-        log.info("Book added successfully with ID: {}", savedBook.getId());
-        return ResponseEntity.ok(savedBook);
+
+        try {
+            BookDTO savedBook = bookService.addBook(bookDTO);
+            log.info("Book added successfully with ID: {}", savedBook.getId());
+            return ResponseEntity.ok(savedBook);
+        } catch (LibraryManagementException e) {
+            log.error("Error adding book: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
     }
+
 
     // Get all books
     @GetMapping

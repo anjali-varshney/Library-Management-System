@@ -1,6 +1,7 @@
 package com.ajackus.Library_Management_System.controller;
 
 import com.ajackus.Library_Management_System.dto.BookDTO;
+import com.ajackus.Library_Management_System.exception.LibraryManagementException;
 import com.ajackus.Library_Management_System.model.Book;
 import com.ajackus.Library_Management_System.repository.BookRepository;
 import com.ajackus.Library_Management_System.service.interfaces.BookService;
@@ -35,16 +36,22 @@ public class HomeController {
         }
 
         @PostMapping("/add")
-        public String addBook(@ModelAttribute("bookDTO") BookDTO bookDTO, RedirectAttributes redirectAttributes) {
-            log.info("Received request to add book: {}", bookDTO);
-            bookDTO.setAvailabilityStatus("Available");
-            bookService.addBook(bookDTO);
-            log.info("Book added successfully!");
-            redirectAttributes.addFlashAttribute("successMessage", "Book added successfully!");
-            return "redirect:/books/add";
+        public String addBook(@ModelAttribute("bookDTO") BookDTO bookDTO, Model model) {
+            try {
+                log.info("Received request to add book: {}", bookDTO);
+                bookDTO.setAvailabilityStatus("Available");
+                bookService.addBook(bookDTO);
+                log.info("Book added successfully!");
+                model.addAttribute("successMessage", "Book added successfully!");
+            } catch (LibraryManagementException e) {
+                log.error("Error adding book: {}", e.getMessage());
+                model.addAttribute("errorMessage", e.getMessage()); // Add error message to model
+            }
+            return "addbooks";  // Return to the same page (don't use redirect)
         }
 
-        @GetMapping("/view")
+
+    @GetMapping("/view")
         public String viewAllBooks(Model model) {
             log.info("Fetching all books from the database...");
             List<BookDTO> books = bookService.getAllBooks();
