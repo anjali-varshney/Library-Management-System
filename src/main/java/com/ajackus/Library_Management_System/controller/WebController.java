@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/books")
 @Slf4j
 @RequiredArgsConstructor
-public class HomeController {
+public class WebController {
 
         private final BookService bookService;
         private final BookRepository bookRepository;
