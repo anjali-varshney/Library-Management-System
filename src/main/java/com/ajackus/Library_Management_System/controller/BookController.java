@@ -38,9 +38,9 @@ public class BookController {
 
     // Get book by ID
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        log.info("Fetching book with ID: {}", id);
-        BookDTO book = bookService.getBookById(id);
+    public ResponseEntity<BookDTO> getBookById(@PathVariable String isbn) {
+        log.info("Fetching book with ID: {}", isbn);
+        BookDTO book = bookService.getBookByISBN(isbn);
         log.info("Book found: {}", book);
         return ResponseEntity.ok(book);
     }
@@ -57,18 +57,18 @@ public class BookController {
 
     // Update book details
     @PutMapping("/update/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
-        log.info("Received request to update book ID: {}", id);
-        BookDTO updatedBook = bookService.updateBook(id, bookDTO);
+    public ResponseEntity<BookDTO> updateBook(@PathVariable String isbn, @RequestBody BookDTO bookDTO) {
+        log.info("Received request to update book ID: {}", isbn);
+        BookDTO updatedBook = bookService.updateBook(isbn, bookDTO);
         log.info("Book updated successfully: {}", updatedBook);
         return ResponseEntity.ok(updatedBook);
     }
 
     // Delete book by ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
-        log.info("Received request to delete book ID: {}", id);
-        bookService.deleteBook(id);
+    public ResponseEntity<String> deleteBook(@PathVariable String isbn) {
+        log.info("Received request to delete book ID: {}", isbn);
+        bookService.deleteBook(isbn);
         log.info("Book deleted successfully.");
         return ResponseEntity.ok("Book deleted successfully");
     }
