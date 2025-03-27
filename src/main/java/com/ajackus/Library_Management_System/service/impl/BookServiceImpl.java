@@ -1,9 +1,11 @@
 package com.ajackus.Library_Management_System.service.impl;
 
 import com.ajackus.Library_Management_System.dto.BookDTO;
+import com.ajackus.Library_Management_System.exception.LibraryManagementException;
 import com.ajackus.Library_Management_System.model.Book;
 import com.ajackus.Library_Management_System.repository.BookRepository;
 import com.ajackus.Library_Management_System.service.interfaces.BookService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -23,56 +25,59 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO addBook(BookDTO bookDto) {
-        log.info("Adding a new book: {}", bookDto);
+        log.info("Adding new book: {}", bookDto.getTitle());
+
+        if (bookRepository.existsByTitle(bookDto.getTitle())) {
+            throw new LibraryManagementException("Duplicate book entry: " + bookDto.getTitle());
+        }
+
         Book book = modelMapper.map(bookDto, Book.class);
-        book = bookRepository.save(book);
-        log.info("Book added successfully with ID: {}", book.getId());
+        bookRepository.save(book);
         return modelMapper.map(book, BookDTO.class);
     }
 
-     // Retrieves all books from the library.
-     @Override
+    @Override
     public List<BookDTO> getAllBooks() {
         log.info("Fetching all books");
         List<BookDTO> books = bookRepository.findAll().stream()
                 .map(book -> modelMapper.map(book, BookDTO.class))
                 .collect(Collectors.toList());
+
         log.info("Total books retrieved: {}", books.size());
         return books;
     }
 
-    //Retrieves a book by its ID.
     @Override
-    public BookDTO getBookById(Long id) {
-        log.info("Fetching book with ID: {}", id);
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Book with ID {} not found", id);
-                    return new RuntimeException("Book not found");
-                });
+    public BookDTO getBookByISBN(String isbn) {
+        log.info("Fetching book with ISBN: {}", isbn);
+        Book book = (Book) bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new LibraryManagementException("Book not found with ISBN: " + isbn));
+
         return modelMapper.map(book, BookDTO.class);
     }
 
-    //Retrieves a book by its title.
+
     @Override
     public BookDTO getBookByTitle(String title) {
         log.info("Fetching book with title: {}", title);
-        Optional<Book> book = bookRepository.findByTitle(title);
-        return book.map(value -> modelMapper.map(value, BookDTO.class))
+        Book book = bookRepository.findByTitle(title)
                 .orElseThrow(() -> {
                     log.warn("Book with title '{}' not found", title);
-                    return new RuntimeException("Book not found");
+                    return new LibraryManagementException("Book not found with title: " + title);
                 });
+
+        return modelMapper.map(book, BookDTO.class);
     }
 
-    //Updates an existing book's details.
     @Override
-    public BookDTO updateBook(Long id, BookDTO bookDto) {
-        log.info("Updating book with ID: {}", id);
-        Book existingBook = bookRepository.findById(id)
+    @Transactional
+    public BookDTO updateBook(String isbn, BookDTO bookDto) {
+        log.info("Updating book with ISBN: {}", isbn);
+
+        Book existingBook = (Book) bookRepository.findByIsbn(isbn)
                 .orElseThrow(() -> {
-                    log.warn("Book with ID {} not found", id);
-                    return new RuntimeException("Book not found");
+                    log.warn("Book with ISBN {} not found", isbn);
+                    return new LibraryManagementException("Book not found with ISBN: " + isbn);
                 });
 
         existingBook.setTitle(bookDto.getTitle());
@@ -81,22 +86,22 @@ public class BookServiceImpl implements BookService {
         existingBook.setAvailabilityStatus(bookDto.getAvailabilityStatus());
 
         bookRepository.save(existingBook);
-        log.info("Book with ID {} updated successfully", id);
+        log.info("Book with ISBN {} updated successfully", isbn);
+
         return modelMapper.map(existingBook, BookDTO.class);
     }
 
-    //Deletes a book by its ID.
     @Override
-    public void deleteBook(Long id) {
-        log.info("Deleting book with ID: {}", id);
-        if (!bookRepository.existsById(id)) {
-            log.warn("Attempted to delete a non-existing book with ID: {}", id);
-            throw new RuntimeException("Book not found");
-        }
-        bookRepository.deleteById(id);
-        log.info("Book with ID {} deleted successfully", id);
+    public void deleteBook(String isbn) {
+        log.info("Deleting book with ISBN: {}", isbn);
 
+        Book book = (Book) bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> {
+                    log.warn("Attempted to delete a non-existing book with ISBN: {}", isbn);
+                    return new LibraryManagementException("Book with ISBN " + isbn + " not found");
+                });
+        bookRepository.delete(book);
+        log.info("Book with ISBN {} deleted successfully", isbn);
     }
+
 }
-
-

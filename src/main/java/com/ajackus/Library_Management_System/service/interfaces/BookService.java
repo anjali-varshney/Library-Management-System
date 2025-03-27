@@ -6,8 +6,8 @@ public interface BookService {
 
     public BookDTO addBook(BookDTO bookDto);
     public List<BookDTO> getAllBooks();
-    public BookDTO getBookById(Long id);
+    public BookDTO getBookByISBN(String isbn);
     public BookDTO getBookByTitle(String title);
-    public BookDTO updateBook(Long id, BookDTO bookDto);
-    public void deleteBook(Long id);
+    public BookDTO updateBook(String isbn, BookDTO bookDto);
+    public void deleteBook(String isbn);
 }
