@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+//@Controller
 @RestController
 @RequestMapping("api/v1/books")
 @Slf4j
@@ -19,7 +19,7 @@ public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<BookDTO> addBook(@RequestBody BookDTO bookDTO) {
         log.info("Received request to add book: {}", bookDTO);
         BookDTO savedBook = bookService.addBook(bookDTO);
@@ -46,16 +46,17 @@ public class BookController {
     }
 
     // Search book by title
+    //We are assuming there is no duplacy in the title of books.
     @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchByTitle(@RequestParam String title) {
+    public ResponseEntity<BookDTO> searchByTitle(@RequestParam String title) {
         log.info("Searching books with title containing: '{}'", title);
-        List<BookDTO> books = bookService.searchByTitle(title);
-        log.info("Books found: {}", books.size());
-        return ResponseEntity.ok(books);
+        BookDTO book = bookService.getBookByTitle(title);
+        log.info("Books found: {}", book);
+        return ResponseEntity.ok(book);
     }
 
     // Update book details
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
         log.info("Received request to update book ID: {}", id);
         BookDTO updatedBook = bookService.updateBook(id, bookDTO);
@@ -64,7 +65,7 @@ public class BookController {
     }
 
     // Delete book by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         log.info("Received request to delete book ID: {}", id);
         bookService.deleteBook(id);
