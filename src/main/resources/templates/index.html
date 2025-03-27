@@ -57,6 +57,10 @@
 
 <h1>📚 Welcome to the Library Management System</h1>
 
+<p th:if="${successMessage}" th:text="${successMessage}" style="color: green; font-weight: bold;"></p>
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-weight: bold;"></p>
+
+
 <div class="menu">
     <a th:href="@{/books/view}" class="menu-button">📖 View All Books</a>
     <a th:href="@{/books/add}" class="menu-button">➕ Add a New Book</a>

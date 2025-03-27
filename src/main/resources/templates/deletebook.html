@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Update Book</title>
+    <title>Delete Book</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,12 +19,12 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 350px;
             text-align: center;
         }
 
         h2 {
-            color: #333;
+            color: #d9534f;
         }
 
         label {
@@ -34,7 +34,7 @@
             text-align: left;
         }
 
-        input, select {
+        input {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
@@ -44,7 +44,7 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #d9534f;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -55,7 +55,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #c9302c;
         }
 
         .message {
@@ -75,27 +75,13 @@
 <body>
 
 <div class="container">
-    <h2>Update Book Details</h2>
+    <h2>Delete a Book</h2>
 
-    <form th:action="@{/books/update}" method="post" th:object="${book}">
-        <input type="hidden" th:field="*{isbn}" />
+    <form th:action="@{/books/delete}" method="post">
+        <label for="isbn">Enter ISBN:</label>
+        <input type="text" id="isbn" name="isbn" placeholder="Enter ISBN" required>
 
-        <label for="title">Title:</label>
-        <input type="text" id="title" th:field="*{title}" required />
-
-        <label for="author">Author:</label>
-        <input type="text" id="author" th:field="*{author}" required />
-
-        <label for="genre">Genre:</label>
-        <input type="text" id="genre" th:field="*{genre}" required />
-
-        <label for="availability">Availability:</label>
-        <select id="availability" th:field="*{availabilityStatus}">
-            <option value="AVAILABLE">Available</option>
-            <option value="UNAVAILABLE">Unavailable</option>
-        </select>
-
-        <button type="submit">Update Book</button>
+        <button type="submit">Delete Book</button>
     </form>
 
     <p th:if="${successMessage}" th:text="${successMessage}" class="message success"></p>
